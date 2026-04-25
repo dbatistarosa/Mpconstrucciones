@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#2d2d2d"/>
+  <rect x="0" y="350" width="800" height="250" fill="#3d3d3d"/>
+  <circle cx="400" cy="220" r="80" fill="#4a5568"/>
+  <rect x="300" y="300" width="200" height="300" fill="#4a5568"/>
+  <text x="400" y="570" font-family="Arial" font-size="24" fill="#c4bdb5" text-anchor="middle">Equipo MPC</text>
+</svg>

@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "siteName": "Mejía Peralta Construcciones S.R.L",
+    "tagline": "We build your ideas"
+  },
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "projects": "Projects",
+    "about": "About",
+    "contact": "Contact",
+    "menuOpen": "Open menu",
+    "menuClose": "Close menu"
+  },
+  "hero": {
+    "eyebrow": "Civil Engineering & Construction",
+    "title": "We Build<br>Your Ideas",
+    "subtitle": "From architectural design to industrial structures. Serving La Vega and all of the Dominican Republic.",
+    "ctaPrimary": "View Projects",
+    "ctaSecondary": "Contact Us"
+  },
+  "stats": {
+    "projects": "Completed Projects",
+    "years": "Years of Experience",
+    "clients": "Satisfied Clients",
+    "services": "Service Lines"
+  },
+  "services": {
+    "label": "Our Services",
+    "title": "What we build",
+    "intro": "We offer comprehensive civil engineering and construction solutions for residential, commercial, and industrial projects.",
+    "viewAll": "View all services",
+    "civil":          { "name": "Civil Engineering",       "desc": "Planning and execution of large-scale civil works to the highest standards." },
+    "earthwork":      { "name": "Earthwork",               "desc": "Land preparation and leveling with state-of-the-art specialized machinery." },
+    "architectural":  { "name": "Architectural Design",    "desc": "Residential, commercial, and industrial projects tailored to your vision." },
+    "structural":     { "name": "Structural Design",       "desc": "Calculation and design of safe, efficient, and durable structures." },
+    "metalStructure": { "name": "Metal Structures",        "desc": "Fabrication and installation of steel structures for all types of projects." },
+    "concrete":       { "name": "Concrete Structures",     "desc": "Construction of foundations, columns, beams, and slabs of the highest quality." },
+    "residential":    { "name": "Residential Homes",       "desc": "Your home designed and built with quality, safety, and personalized care." },
+    "industrial":     { "name": "Industrial Buildings",    "desc": "Large-scale buildings for storage, manufacturing, and industrial use." },
+    "commercial":     { "name": "Commercial Spaces",       "desc": "Functional and modern spaces for all types of businesses." },
+    "cabins":         { "name": "Cabins",                  "desc": "Construction of wood and mixed-material cabins for tourism and recreation." },
+    "paving":         { "name": "Paving",                  "desc": "Installation of pavers, asphalt, and high-durability exterior surfaces." },
+    "maintenance":    { "name": "Maintenance Plans",       "desc": "Preventive and corrective programs to preserve the value of your building." }
+  },
+  "process": {
+    "label": "Our Process",
+    "title": "How we work",
+    "step1": { "title": "Consultation", "desc": "We listen to your needs and evaluate the project on-site at no cost." },
+    "step2": { "title": "Design",       "desc": "We prepare plans, renderings, and a detailed budget for your approval." },
+    "step3": { "title": "Construction", "desc": "We execute the work with quality materials and permanent supervision." },
+    "step4": { "title": "Delivery",     "desc": "We deliver the finished project with warranty and post-construction support." }
+  },
+  "projects": {
+    "label": "Portfolio",
+    "title": "Our Projects",
+    "intro": "Every project reflects our commitment to quality, detail, and client satisfaction.",
+    "viewAll": "View all projects",
+    "filterAll":        "All",
+    "filterResidential":"Residential",
+    "filterCommercial": "Commercial",
+    "filterIndustrial": "Industrial",
+    "filterCabin":      "Cabins"
+  },
+  "about": {
+    "label": "About Us",
+    "title": "Committed to excellence",
+    "shortDesc": "We are a Dominican company with over a decade of experience building dreams. Our team combines precision engineering with personalized attention on every project.",
+    "learnMore": "Learn more",
+    "missionLabel": "Mission",
+    "missionTitle": "Our Mission",
+    "missionText":  "To provide comprehensive construction solutions with superior quality, safety, and responsibility, exceeding our clients' expectations on every project.",
+    "visionLabel": "Vision",
+    "visionTitle": "Our Vision",
+    "visionText":  "To be the most trusted and recognized construction company in the northern region of the Dominican Republic, expanding our reach nationally.",
+    "valuesLabel": "Our Values",
+    "valuesTitle": "What guides us",
+    "value1Title": "Quality",      "value1Text": "Every detail matters. We use the best materials and techniques to guarantee works that last generations.",
+    "value2Title": "Safety",       "value2Text": "The safety of our team and clients is our top priority at every stage of the project.",
+    "value3Title": "Commitment",   "value3Text": "We meet deadlines and budgets. Your trust is our most valuable asset.",
+    "value4Title": "Innovation",   "value4Text": "We adopt new technologies and construction methods to deliver more efficient solutions.",
+    "timelineLabel": "History",
+    "timelineTitle": "Our Journey"
+  },
+  "contact": {
+    "label": "Contact",
+    "title": "Let's talk about your project",
+    "intro": "We are ready to turn your vision into reality. Write or call us today.",
+    "formTitle": "Send us a message",
+    "nameLabel":      "Full name",
+    "namePlaceholder":"Your name",
+    "emailLabel":     "Email address",
+    "emailPlaceholder":"you@email.com",
+    "phoneLabel":     "Phone / WhatsApp",
+    "phonePlaceholder":"(809) 000-0000",
+    "serviceLabel":   "Service of interest",
+    "servicePlaceholder": "Select a service",
+    "messageLabel":   "Tell us about your project",
+    "messagePlaceholder": "Briefly describe your project or inquiry...",
+    "submitBtn": "Send via WhatsApp",
+    "infoTitle": "Contact Information",
+    "addressTitle": "Address",
+    "address": "C/ Profesor Juan Bosch, No. 72, 2nd Floor, Suite No. 4, La Vega, Dominican Republic",
+    "whatsappBtn": "Chat on WhatsApp",
+    "followTitle": "Follow us",
+    "mapTitle": "Location"
+  },
+  "cta": {
+    "title": "Ready to start your project?",
+    "subtitle": "Contact us today and let's make your vision a reality. Free initial consultation.",
+    "btn": "WhatsApp Now"
+  },
+  "footer": {
+    "tagline": "Building your ideas from La Vega, Dominican Republic.",
+    "linksTitle": "Pages",
+    "copyright": "© 2025 Mejía Peralta Construcciones S.R.L. All rights reserved."
+  }
+}

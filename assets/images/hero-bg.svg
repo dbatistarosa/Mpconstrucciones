@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <rect width="1920" height="1080" fill="#1a1a1a"/>
+  <rect x="0" y="600" width="1920" height="480" fill="#2d2d2d"/>
+  <!-- Construction silhouette -->
+  <rect x="200" y="300" width="40" height="300" fill="#3d3d3d"/>
+  <rect x="600" y="200" width="60" height="400" fill="#3d3d3d"/>
+  <rect x="900" y="250" width="80" height="350" fill="#3d3d3d"/>
+  <rect x="1300" y="180" width="50" height="420" fill="#3d3d3d"/>
+  <rect x="1600" y="300" width="70" height="300" fill="#3d3d3d"/>
+  <!-- Crane arm -->
+  <line x1="600" y1="200" x2="900" y2="150" stroke="#4a5568" stroke-width="8"/>
+  <line x1="900" y1="150" x2="900" y2="600" stroke="#4a5568" stroke-width="4"/>
+  <text x="960" y="560" font-family="Arial" font-size="72" fill="#b45309" font-weight="bold">MP</text>
+  <text x="850" y="640" font-family="Arial" font-size="32" fill="#c4bdb5">CONSTRUCCIONES</text>
+</svg>

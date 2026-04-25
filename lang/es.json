@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "siteName": "Mejía Peralta Construcciones S.R.L",
+    "tagline": "Construimos tus ideas"
+  },
+  "nav": {
+    "home": "Inicio",
+    "services": "Servicios",
+    "projects": "Proyectos",
+    "about": "Nosotros",
+    "contact": "Contacto",
+    "menuOpen": "Abrir menú",
+    "menuClose": "Cerrar menú"
+  },
+  "hero": {
+    "eyebrow": "Ingeniería Civil y Construcción",
+    "title": "Construimos<br>Tus Ideas",
+    "subtitle": "Desde diseño arquitectónico hasta estructuras industriales. Sirviendo a La Vega y toda la República Dominicana.",
+    "ctaPrimary": "Ver Proyectos",
+    "ctaSecondary": "Contáctanos"
+  },
+  "stats": {
+    "projects": "Proyectos Completados",
+    "years": "Años de Experiencia",
+    "clients": "Clientes Satisfechos",
+    "services": "Líneas de Servicio"
+  },
+  "services": {
+    "label": "Nuestros Servicios",
+    "title": "Lo que construimos",
+    "intro": "Ofrecemos soluciones integrales de ingeniería civil y construcción para proyectos residenciales, comerciales e industriales.",
+    "viewAll": "Ver todos los servicios",
+    "civil":          { "name": "Ingeniería Civil",        "desc": "Planificación y ejecución de obras civiles de alta envergadura con los más altos estándares." },
+    "earthwork":      { "name": "Movimiento de Tierra",    "desc": "Preparación y nivelación de terrenos con maquinaria especializada de última generación." },
+    "architectural":  { "name": "Diseño Arquitectónico",   "desc": "Proyectos residenciales, comerciales e industriales diseñados a tu medida." },
+    "structural":     { "name": "Diseño Estructural",      "desc": "Cálculo y diseño de estructuras seguras, eficientes y durables." },
+    "metalStructure": { "name": "Estructuras Metálicas",   "desc": "Fabricación e instalación de estructuras de acero para todo tipo de obras." },
+    "concrete":       { "name": "Estructuras de Concreto", "desc": "Construcción de fundaciones, columnas, vigas y losas de la más alta calidad." },
+    "residential":    { "name": "Casas Residenciales",     "desc": "Tu hogar diseñado y construido con calidad, seguridad y a tu medida." },
+    "industrial":     { "name": "Naves Industriales",      "desc": "Edificios de gran escala para almacenamiento, manufactura y uso industrial." },
+    "commercial":     { "name": "Locales Comerciales",     "desc": "Espacios funcionales y modernos para negocios de todo tipo." },
+    "cabins":         { "name": "Cabañas",                 "desc": "Construcción de cabañas en madera y mixtas para turismo y recreación." },
+    "paving":         { "name": "Pavimentación",           "desc": "Instalación de adoquines, asfalto y superficies exteriores de alta durabilidad." },
+    "maintenance":    { "name": "Planes de Mantenimiento", "desc": "Programas preventivos y correctivos para preservar el valor de tu edificación." }
+  },
+  "process": {
+    "label": "Nuestro Proceso",
+    "title": "Cómo trabajamos",
+    "step1": { "title": "Consulta",      "desc": "Escuchamos tus necesidades y evaluamos el proyecto en sitio sin costo alguno." },
+    "step2": { "title": "Diseño",        "desc": "Preparamos planos, renders y presupuesto detallado para tu aprobación." },
+    "step3": { "title": "Construcción",  "desc": "Ejecutamos la obra con materiales de calidad y supervisión permanente." },
+    "step4": { "title": "Entrega",       "desc": "Entregamos el proyecto terminado, con garantía y acompañamiento post-obra." }
+  },
+  "projects": {
+    "label": "Portafolio",
+    "title": "Nuestros Proyectos",
+    "intro": "Cada obra refleja nuestro compromiso con la calidad, el detalle y la satisfacción de nuestros clientes.",
+    "viewAll": "Ver todos los proyectos",
+    "filterAll":        "Todos",
+    "filterResidential":"Residencial",
+    "filterCommercial": "Comercial",
+    "filterIndustrial": "Industrial",
+    "filterCabin":      "Cabañas"
+  },
+  "about": {
+    "label": "Quiénes Somos",
+    "title": "Comprometidos con la excelencia",
+    "shortDesc": "Somos una empresa dominicana con más de una década de experiencia construyendo sueños. Nuestro equipo combina ingeniería de precisión con atención personalizada en cada proyecto.",
+    "learnMore": "Conocer más",
+    "missionLabel": "Misión",
+    "missionTitle": "Nuestra Misión",
+    "missionText":  "Brindar soluciones integrales de construcción con calidad superior, seguridad y responsabilidad, superando las expectativas de nuestros clientes en cada proyecto.",
+    "visionLabel": "Visión",
+    "visionTitle": "Nuestra Visión",
+    "visionText":  "Ser la empresa constructora de mayor confianza y reconocimiento en la región norte de la República Dominicana, expandiendo nuestro alcance a nivel nacional.",
+    "valuesLabel": "Nuestros Valores",
+    "valuesTitle": "Lo que nos guía",
+    "value1Title": "Calidad",    "value1Text": "Cada detalle importa. Usamos los mejores materiales y técnicas para garantizar obras que duran generaciones.",
+    "value2Title": "Seguridad",  "value2Text": "La seguridad de nuestro equipo y clientes es nuestra prioridad número uno en cada fase del proyecto.",
+    "value3Title": "Compromiso", "value3Text": "Cumplimos plazos y presupuestos. Tu confianza es nuestro activo más valioso.",
+    "value4Title": "Innovación", "value4Text": "Adoptamos nuevas tecnologías y métodos constructivos para ofrecer soluciones más eficientes.",
+    "timelineLabel": "Historia",
+    "timelineTitle": "Nuestro Camino"
+  },
+  "contact": {
+    "label": "Contacto",
+    "title": "Hablemos de tu proyecto",
+    "intro": "Estamos listos para convertir tu visión en realidad. Escríbenos o llámanos hoy.",
+    "formTitle": "Envíanos un mensaje",
+    "nameLabel":      "Nombre completo",
+    "namePlaceholder":"Tu nombre",
+    "emailLabel":     "Correo electrónico",
+    "emailPlaceholder":"tu@email.com",
+    "phoneLabel":     "Teléfono / WhatsApp",
+    "phonePlaceholder":"(809) 000-0000",
+    "serviceLabel":   "Servicio de interés",
+    "servicePlaceholder": "Selecciona un servicio",
+    "messageLabel":   "Cuéntanos tu proyecto",
+    "messagePlaceholder": "Describe brevemente tu proyecto o consulta...",
+    "submitBtn": "Enviar por WhatsApp",
+    "infoTitle": "Información de Contacto",
+    "addressTitle": "Dirección",
+    "address": "C/ Profesor Juan Bosch, No. 72, 2do Nivel, Suite No. 4, La Vega, República Dominicana",
+    "whatsappBtn": "Escribir por WhatsApp",
+    "followTitle": "Síguenos",
+    "mapTitle": "Ubicación"
+  },
+  "cta": {
+    "title": "¿Listo para comenzar tu proyecto?",
+    "subtitle": "Contáctanos hoy y hagamos realidad tu visión. Consulta inicial sin costo.",
+    "btn": "WhatsApp Ahora"
+  },
+  "footer": {
+    "tagline": "Construimos tus ideas desde La Vega, República Dominicana.",
+    "linksTitle": "Páginas",
+    "copyright": "© 2025 Mejía Peralta Construcciones S.R.L. Todos los derechos reservados."
+  }
+}

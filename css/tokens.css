@@ -1,0 +1,88 @@
+:root {
+  /* Colors */
+  --color-charcoal:      #1a1a1a;
+  --color-charcoal-mid:  #2d2d2d;
+  --color-charcoal-soft: #3d3d3d;
+  --color-white-warm:    #f7f6f4;
+  --color-concrete:      #c4bdb5;
+  --color-concrete-dark: #9e9690;
+  --color-steel:         #4a5568;
+  --color-steel-light:   #718096;
+  --color-amber:         #b45309;
+  --color-amber-bright:  #d97706;
+  --color-amber-glow:    #f59e0b;
+  --color-green-wa:      #25d366;
+
+  /* Semantic */
+  --bg-primary:    var(--color-charcoal);
+  --bg-secondary:  var(--color-charcoal-mid);
+  --bg-surface:    var(--color-white-warm);
+  --text-on-dark:  var(--color-white-warm);
+  --text-muted:    var(--color-concrete);
+  --text-on-light: var(--color-charcoal);
+  --accent:        var(--color-amber);
+  --accent-hover:  var(--color-amber-bright);
+  --border-subtle: var(--color-charcoal-soft);
+
+  /* Fonts */
+  --font-heading: 'Oswald', 'Arial Narrow', sans-serif;
+  --font-body:    'Open Sans', 'Helvetica Neue', sans-serif;
+
+  /* Type scale */
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  1.875rem;
+  --text-4xl:  2.25rem;
+  --text-5xl:  3rem;
+  --text-6xl:  clamp(2.5rem, 6vw, 4rem);
+  --text-hero: clamp(3rem, 8vw, 5.5rem);
+
+  /* Spacing (4px base) */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  /* Layout */
+  --container-max: 1200px;
+  --container-pad: clamp(1rem, 4vw, 2rem);
+  --nav-height:    72px;
+
+  /* Borders */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --border-accent: 3px solid var(--accent);
+
+  /* Shadows */
+  --shadow-sm:    0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md:    0 4px 12px rgba(0,0,0,0.5);
+  --shadow-lg:    0 8px 32px rgba(0,0,0,0.6);
+  --shadow-amber: 0 4px 20px rgba(180,83,9,0.3);
+
+  /* Transitions */
+  --ease-fast:   150ms ease;
+  --ease-normal: 250ms ease;
+  --ease-slow:   400ms ease;
+
+  /* Z-index */
+  --z-base:     0;
+  --z-raised:   10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+}

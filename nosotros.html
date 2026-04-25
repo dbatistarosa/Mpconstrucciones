@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sobre Mejía Peralta Construcciones — Empresa dominicana de ingeniería civil y construcción en La Vega, RD. Misión, visión, valores e historia.">
+  <meta property="og:title"       content="Nosotros — Mejía Peralta Construcciones S.R.L">
+  <meta property="og:image"       content="assets/images/og-image.jpg">
+  <title>Nosotros — Mejía Peralta Construcciones S.R.L</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap">
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/typography.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="site-header" class="site-header is-scrolled">
+  <div class="container">
+    <a href="index.html" class="nav__logo" aria-label="Mejía Peralta Construcciones — Inicio">
+      <div class="nav__logo-icon">MP</div>
+      <div class="nav__logo-text">Mejía Peralta<span>Construcciones S.R.L</span></div>
+    </a>
+    <nav class="nav__menu" id="nav-menu" role="navigation" aria-label="Navegación principal">
+      <ul class="nav__list">
+        <li><a href="index.html"     class="nav__link" data-i18n="nav.home">Inicio</a></li>
+        <li><a href="servicios.html" class="nav__link" data-i18n="nav.services">Servicios</a></li>
+        <li><a href="proyectos.html" class="nav__link" data-i18n="nav.projects">Proyectos</a></li>
+        <li><a href="nosotros.html"  class="nav__link is-active" data-i18n="nav.about">Nosotros</a></li>
+        <li><a href="contacto.html"  class="nav__link nav__link--cta" data-i18n="nav.contact">Contacto</a></li>
+      </ul>
+      <div class="lang-toggle js-lang-toggle" role="group" aria-label="Selector de idioma">
+        <button class="js-lang-es is-active" data-lang="es">ES</button>
+        <button class="js-lang-en" data-lang="en">EN</button>
+      </div>
+    </nav>
+    <button class="nav__hamburger js-nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Abrir menú" data-i18n-aria="nav.menuOpen">
+      <span class="hamburger__bar"></span><span class="hamburger__bar"></span><span class="hamburger__bar"></span>
+    </button>
+  </div>
+</header>
+<div class="nav__overlay js-nav-overlay" aria-hidden="true"></div>
+
+<main>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="container">
+    <p class="page-hero__eyebrow overline reveal" data-i18n="about.label">Quiénes Somos</p>
+    <h1 class="page-hero__title reveal" data-i18n="about.title">Comprometidos con la excelencia</h1>
+    <p class="page-hero__subtitle reveal" data-i18n="about.shortDesc">Somos una empresa dominicana con más de una década de experiencia construyendo sueños.</p>
+  </div>
+</section>
+
+<!-- MISSION & VISION -->
+<section class="section section--dark">
+  <div class="container">
+    <div class="mission-vision-grid">
+      <div class="mv-card reveal reveal--left">
+        <p class="mv-card__label overline" data-i18n="about.missionLabel">Misión</p>
+        <h2 class="mv-card__title" data-i18n="about.missionTitle">Nuestra Misión</h2>
+        <p class="mv-card__text" data-i18n="about.missionText">Brindar soluciones integrales de construcción con calidad superior, seguridad y responsabilidad, superando las expectativas de nuestros clientes en cada proyecto.</p>
+      </div>
+      <div class="mv-card reveal reveal--right">
+        <p class="mv-card__label overline" data-i18n="about.visionLabel">Visión</p>
+        <h2 class="mv-card__title" data-i18n="about.visionTitle">Nuestra Visión</h2>
+        <p class="mv-card__text" data-i18n="about.visionText">Ser la empresa constructora de mayor confianza y reconocimiento en la región norte de la República Dominicana, expandiendo nuestro alcance a nivel nacional.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="section section--mid">
+  <div class="container">
+    <p class="section-label overline reveal" data-i18n="about.valuesLabel">Nuestros Valores</p>
+    <h2 class="section-title reveal" data-i18n="about.valuesTitle">Lo que nos guía</h2>
+    <div class="values-grid reveal-group" style="margin-top: var(--space-10);">
+      <div class="value-item reveal">
+        <div class="icon-box">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <h3 class="value-item__title" data-i18n="about.value1Title">Calidad</h3>
+        <p class="value-item__text" data-i18n="about.value1Text">Cada detalle importa. Usamos los mejores materiales y técnicas para garantizar obras que duran generaciones.</p>
+      </div>
+      <div class="value-item reveal">
+        <div class="icon-box">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3 class="value-item__title" data-i18n="about.value2Title">Seguridad</h3>
+        <p class="value-item__text" data-i18n="about.value2Text">La seguridad de nuestro equipo y clientes es nuestra prioridad número uno en cada fase del proyecto.</p>
+      </div>
+      <div class="value-item reveal">
+        <div class="icon-box">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <h3 class="value-item__title" data-i18n="about.value3Title">Compromiso</h3>
+        <p class="value-item__text" data-i18n="about.value3Text">Cumplimos plazos y presupuestos. Tu confianza es nuestro activo más valioso.</p>
+      </div>
+      <div class="value-item reveal">
+        <div class="icon-box">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+        </div>
+        <h3 class="value-item__title" data-i18n="about.value4Title">Innovación</h3>
+        <p class="value-item__text" data-i18n="about.value4Text">Adoptamos nuevas tecnologías y métodos constructivos para ofrecer soluciones más eficientes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="section section--dark">
+  <div class="container">
+    <p class="section-label overline reveal" data-i18n="about.timelineLabel">Historia</p>
+    <h2 class="section-title reveal" data-i18n="about.timelineTitle">Nuestro Camino</h2>
+    <div class="timeline" style="margin-top: var(--space-12);">
+      <div class="timeline-item reveal">
+        <div class="timeline-item__dot">10</div>
+        <div class="timeline-item__content">
+          <p class="timeline-item__year">Fundación</p>
+          <h3 class="timeline-item__title">Inicio de operaciones</h3>
+          <p class="timeline-item__desc">Mejía Peralta Construcciones S.R.L abre sus puertas en La Vega, República Dominicana, con el compromiso de brindar servicios de construcción de calidad.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-item__dot">+</div>
+        <div class="timeline-item__content">
+          <p class="timeline-item__year">Expansión</p>
+          <h3 class="timeline-item__title">Primeros proyectos industriales</h3>
+          <p class="timeline-item__desc">Completamos nuestros primeros proyectos de naves industriales y estructuras metálicas, consolidando nuestra reputación en el sector.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-item__dot">+</div>
+        <div class="timeline-item__content">
+          <p class="timeline-item__year">Crecimiento</p>
+          <h3 class="timeline-item__title">150+ proyectos completados</h3>
+          <p class="timeline-item__desc">Alcanzamos el hito de 150 proyectos exitosos, sirviendo a más de 200 clientes satisfechos en toda la región norte del país.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-item__dot">★</div>
+        <div class="timeline-item__content">
+          <p class="timeline-item__year">Hoy</p>
+          <h3 class="timeline-item__title">Líderes regionales</h3>
+          <p class="timeline-item__desc">Somos una de las empresas constructoras de mayor confianza en La Vega, con 12 líneas de servicio y un equipo altamente capacitado.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section--accent cta-banner">
+  <div class="container">
+    <div class="reveal">
+      <h2 class="cta-banner__title" data-i18n="cta.title">¿Listo para comenzar tu proyecto?</h2>
+      <p class="cta-banner__subtitle" data-i18n="cta.subtitle">Contáctanos hoy y hagamos realidad tu visión. Consulta inicial sin costo.</p>
+      <a href="https://wa.me/18295550000" class="btn btn--whatsapp" target="_blank" rel="noopener noreferrer" data-i18n="cta.btn">WhatsApp Ahora</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer id="site-footer" class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="footer__brand">
+      <a href="index.html" class="nav__logo" style="margin-bottom: var(--space-3);"><div class="nav__logo-icon">MP</div><div class="nav__logo-text">Mejía Peralta<span>Construcciones S.R.L</span></div></a>
+      <p class="footer__brand-tagline" data-i18n="footer.tagline">Construimos tus ideas desde La Vega, República Dominicana.</p>
+    </div>
+    <nav aria-label="Footer navigation">
+      <p class="footer__heading" data-i18n="footer.linksTitle">Páginas</p>
+      <ul class="footer__nav-list">
+        <li><a href="index.html"     data-i18n="nav.home">Inicio</a></li>
+        <li><a href="servicios.html" data-i18n="nav.services">Servicios</a></li>
+        <li><a href="proyectos.html" data-i18n="nav.projects">Proyectos</a></li>
+        <li><a href="nosotros.html"  data-i18n="nav.about">Nosotros</a></li>
+        <li><a href="contacto.html"  data-i18n="nav.contact">Contacto</a></li>
+      </ul>
+    </nav>
+    <div>
+      <p class="footer__heading" data-i18n="contact.infoTitle">Información de Contacto</p>
+      <address class="footer__address" data-i18n="contact.address">C/ Profesor Juan Bosch, No. 72, 2do Nivel, Suite No. 4, La Vega, República Dominicana</address>
+      <div class="footer__social" style="margin-top: var(--space-4);">
+        <a href="https://facebook.com/mejiaperaltaconstrucciones" class="footer__social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+        <a href="https://instagram.com/mejiaperaltaconstrucciones" class="footer__social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+      </div>
+    </div>
+  </div>
+  <div class="footer__bottom"><div class="container"><p class="footer__copyright" data-i18n="footer.copyright">© 2025 Mejía Peralta Construcciones S.R.L. Todos los derechos reservados.</p></div></div>
+</footer>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

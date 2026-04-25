@@ -1,0 +1,48 @@
+/* ── Scroll Reveal ───────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+  transition-delay: var(--delay, 0ms);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal--left {
+  transform: translateX(-36px);
+}
+.reveal--left.is-visible {
+  transform: translateX(0);
+}
+
+.reveal--right {
+  transform: translateX(36px);
+}
+.reveal--right.is-visible {
+  transform: translateX(0);
+}
+
+.reveal--scale {
+  transform: scale(0.92);
+}
+.reveal--scale.is-visible {
+  transform: scale(1);
+}
+
+/* ── Keyframes ───────────────────────────────────── */
+@keyframes pulseAmber {
+  0%, 100% { box-shadow: var(--shadow-amber); }
+  50%       { box-shadow: 0 4px 28px rgba(180,83,9,0.5); }
+}
+
+@keyframes beamSlide {
+  from { transform: scaleX(0); transform-origin: left; }
+  to   { transform: scaleX(1); transform-origin: left; }
+}
+
+.animate-pulse-amber {
+  animation: pulseAmber 2.5s ease-in-out infinite;
+}
