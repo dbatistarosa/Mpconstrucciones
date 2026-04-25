@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" fill="none">
+  <g>
+    <rect x="4" y="8" width="6" height="44" fill="#b45309"/>
+    <polygon points="10,8 22,28 22,8" fill="#b45309"/>
+    <polygon points="22,8 34,28 34,8" fill="#b45309"/>
+    <rect x="34" y="8" width="6" height="44" fill="#b45309"/>
+    <rect x="48" y="8" width="6" height="44" fill="#1a1a1a"/>
+    <path d="M54 8 Q70 8 70 20 Q70 32 54 32" stroke="#1a1a1a" stroke-width="6" fill="none" stroke-linecap="round"/>
+  </g>
+  <text x="82" y="28" font-family="'Oswald', 'Arial Narrow', Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="1" fill="#1a1a1a">MEJÍA PERALTA</text>
+  <text x="82" y="46" font-family="'Oswald', 'Arial Narrow', Arial, sans-serif" font-size="10" font-weight="400" letter-spacing="3" fill="#b45309">CONSTRUCCIONES S.R.L</text>
+  <line x1="82" y1="32" x2="216" y2="32" stroke="#b45309" stroke-width="1" opacity="0.4"/>
+</svg>

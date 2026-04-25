@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Proyecto — Mejía Peralta Construcciones S.R.L">
+  <meta property="og:title"       content="Proyecto — Mejía Peralta Construcciones S.R.L">
+  <meta property="og:description" content="Ingeniería civil y construcción en La Vega, República Dominicana.">
+  <meta property="og:image"       content="assets/images/og-image.jpg">
+  <meta property="og:type"        content="website">
+  <title>Proyecto — Mejía Peralta Construcciones</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap">
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/typography.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="css/gallery.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header id="site-header" class="site-header is-scrolled">
+  <div class="container">
+    <a href="index.html" class="nav__logo" aria-label="Mejía Peralta Construcciones — Inicio">
+      <img src="assets/images/logo.svg" alt="Mejía Peralta Construcciones S.R.L" height="44" class="nav__logo-img">
+    </a>
+    <nav class="nav__menu" id="nav-menu" role="navigation" aria-label="Navegación principal">
+      <ul class="nav__list">
+        <li><a href="index.html"     class="nav__link" data-i18n="nav.home">Inicio</a></li>
+        <li><a href="servicios.html" class="nav__link" data-i18n="nav.services">Servicios</a></li>
+        <li><a href="proyectos.html" class="nav__link is-active" data-i18n="nav.projects">Proyectos</a></li>
+        <li><a href="nosotros.html"  class="nav__link" data-i18n="nav.about">Nosotros</a></li>
+        <li><a href="contacto.html"  class="nav__link nav__link--cta" data-i18n="nav.contact">Contacto</a></li>
+      </ul>
+      <div class="lang-toggle js-lang-toggle" role="group" aria-label="Selector de idioma">
+        <button class="js-lang-es is-active" data-lang="es">ES</button>
+        <button class="js-lang-en" data-lang="en">EN</button>
+      </div>
+    </nav>
+    <button class="nav__hamburger js-nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Abrir menú" data-i18n-aria="nav.menuOpen">
+      <span class="hamburger__bar"></span><span class="hamburger__bar"></span><span class="hamburger__bar"></span>
+    </button>
+  </div>
+</header>
+<div class="nav__overlay js-nav-overlay" aria-hidden="true"></div>
+
+<main>
+
+  <!-- LOADING STATE -->
+  <div id="proj-loading" style="min-height:80vh;display:flex;align-items:center;justify-content:center;background:var(--color-charcoal);">
+    <p style="color:var(--color-concrete);font-family:var(--font-heading);font-size:var(--text-xl);letter-spacing:0.12em;text-transform:uppercase;">Cargando…</p>
+  </div>
+
+  <!-- NOT FOUND STATE -->
+  <div id="proj-notfound" hidden style="min-height:80vh;display:flex;align-items:center;justify-content:center;background:var(--color-charcoal);text-align:center;padding:2rem;">
+    <div>
+      <p class="overline" style="margin-bottom:var(--space-4);">404</p>
+      <h1 style="color:var(--text-on-dark);font-family:var(--font-heading);font-size:var(--text-4xl);margin-bottom:var(--space-6);">Proyecto no encontrado</h1>
+      <a href="proyectos.html" class="btn btn--outline">← Ver todos los proyectos</a>
+    </div>
+  </div>
+
+  <!-- PROJECT CONTENT — populated by JS -->
+  <div id="proj-content" hidden>
+
+    <!-- Hero with cover image -->
+    <section class="project-detail-hero">
+      <img id="proj-cover-img" src="" alt="" class="project-detail-hero__img">
+      <div class="project-detail-hero__overlay">
+        <div class="container">
+          <div class="project-detail-hero__badges">
+            <span id="proj-category-badge" class="badge"></span>
+            <span id="proj-status-badge"   class="badge"></span>
+          </div>
+          <h1 id="proj-title" class="project-detail-hero__title"></h1>
+        </div>
+      </div>
+    </section>
+
+    <!-- Description + Metadata -->
+    <section class="section section--dark">
+      <div class="container">
+        <div class="project-detail__body">
+
+          <div class="project-detail__back">
+            <a href="proyectos.html" class="btn btn--outline">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              <span data-i18n="projects.backToProjects">← Volver a Proyectos</span>
+            </a>
+          </div>
+
+          <div class="project-detail__grid">
+
+            <div class="project-detail__desc">
+              <h2 class="section-title" data-i18n="projects.descriptionTitle">Descripción del Proyecto</h2>
+              <p id="proj-description" class="project-detail__text"></p>
+            </div>
+
+            <aside>
+              <div class="project-meta-card">
+                <div class="project-meta-item" id="meta-year-row">
+                  <span class="project-meta-label" data-i18n="projects.metaYear">Año</span>
+                  <span id="proj-year" class="project-meta-value"></span>
+                </div>
+                <div class="project-meta-item" id="meta-area-row">
+                  <span class="project-meta-label" data-i18n="projects.metaArea">Área</span>
+                  <span id="proj-area" class="project-meta-value"></span>
+                </div>
+                <div class="project-meta-item" id="meta-location-row">
+                  <span class="project-meta-label" data-i18n="projects.metaLocation">Ubicación</span>
+                  <span id="proj-location" class="project-meta-value"></span>
+                </div>
+                <div class="project-meta-item" id="meta-client-row">
+                  <span class="project-meta-label" data-i18n="projects.metaClient">Cliente</span>
+                  <span id="proj-client" class="project-meta-value"></span>
+                </div>
+                <div class="project-meta-item" id="meta-category-row">
+                  <span class="project-meta-label" data-i18n="projects.metaCategory">Categoría</span>
+                  <span id="proj-category-text" class="project-meta-value"></span>
+                </div>
+              </div>
+            </aside>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Full Gallery -->
+    <section id="project-gallery-section" class="section section--concrete" hidden>
+      <div class="container">
+        <p class="section-label overline" data-i18n="projects.galleryLabel">Galería</p>
+        <h2 class="section-title" data-i18n="projects.galleryTitle">Fotos del Proyecto</h2>
+        <div id="project-gallery-grid" class="gallery-grid gallery-grid--project" style="margin-top:var(--space-10);"></div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section--accent cta-banner">
+      <div class="container">
+        <h2 class="cta-banner__title" data-i18n="cta.title">¿Listo para comenzar tu proyecto?</h2>
+        <p class="cta-banner__subtitle" data-i18n="cta.subtitle">Contáctanos hoy y hagamos realidad tu visión. Consulta inicial sin costo.</p>
+        <a href="https://wa.me/18295550000" class="btn btn--whatsapp" target="_blank" rel="noopener noreferrer" data-i18n="cta.btn">WhatsApp Ahora</a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Galería de fotos" tabindex="-1">
+  <div class="lightbox__inner">
+    <button class="lightbox__close js-lightbox-close" aria-label="Cerrar">✕</button>
+    <button class="lightbox__nav lightbox__prev js-lightbox-prev" aria-label="Anterior">‹</button>
+    <img class="lightbox__img" src="" alt="">
+    <button class="lightbox__nav lightbox__next js-lightbox-next" aria-label="Siguiente">›</button>
+    <p class="lightbox__caption"></p>
+  </div>
+</div>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer id="site-footer" class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="footer__brand">
+      <a href="index.html" class="nav__logo" style="margin-bottom:var(--space-3);">
+        <img src="assets/images/logo.svg" alt="Mejía Peralta Construcciones S.R.L" height="44" class="nav__logo-img">
+      </a>
+      <p class="footer__brand-tagline" data-i18n="footer.tagline">Construimos tus ideas desde La Vega, República Dominicana.</p>
+    </div>
+    <nav aria-label="Footer navigation">
+      <p class="footer__heading" data-i18n="footer.linksTitle">Páginas</p>
+      <ul class="footer__nav-list">
+        <li><a href="index.html"     data-i18n="nav.home">Inicio</a></li>
+        <li><a href="servicios.html" data-i18n="nav.services">Servicios</a></li>
+        <li><a href="proyectos.html" data-i18n="nav.projects">Proyectos</a></li>
+        <li><a href="nosotros.html"  data-i18n="nav.about">Nosotros</a></li>
+        <li><a href="contacto.html"  data-i18n="nav.contact">Contacto</a></li>
+      </ul>
+    </nav>
+    <div>
+      <p class="footer__heading" data-i18n="contact.infoTitle">Información de Contacto</p>
+      <address class="footer__address" data-i18n="contact.address">C/ Profesor Juan Bosch, No. 72, 2do Nivel, Suite No. 4, La Vega, República Dominicana</address>
+      <div class="footer__social" style="margin-top:var(--space-4);">
+        <a href="https://facebook.com/mejiaperaltaconstrucciones" class="footer__social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a href="https://instagram.com/mejiaperaltaconstrucciones" class="footer__social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <div class="container">
+      <p class="footer__copyright" data-i18n="footer.copyright">© 2025 Mejía Peralta Construcciones S.R.L. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

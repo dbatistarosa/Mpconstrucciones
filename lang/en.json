@@ -60,7 +60,16 @@
     "filterResidential":"Residential",
     "filterCommercial": "Commercial",
     "filterIndustrial": "Industrial",
-    "filterCabin":      "Cabins"
+    "filterCabin":      "Cabins",
+    "backToProjects":   "← Back to Projects",
+    "descriptionTitle": "Project Description",
+    "galleryLabel":     "Gallery",
+    "galleryTitle":     "Project Photos",
+    "metaYear":         "Year",
+    "metaArea":         "Area",
+    "metaLocation":     "Location",
+    "metaClient":       "Client",
+    "metaCategory":     "Category"
   },
   "about": {
     "label": "About Us",

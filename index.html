@@ -31,11 +31,7 @@
 <header id="site-header" class="site-header">
   <div class="container">
     <a href="index.html" class="nav__logo" aria-label="Mejía Peralta Construcciones — Inicio">
-      <div class="nav__logo-icon" aria-hidden="true">MP</div>
-      <div class="nav__logo-text">
-        Mejía Peralta
-        <span>Construcciones S.R.L</span>
-      </div>
+      <img src="assets/images/logo.svg" alt="Mejía Peralta Construcciones S.R.L" height="44" class="nav__logo-img">
     </a>
 
     <nav class="nav__menu" id="nav-menu" role="navigation" aria-label="Navegación principal">
@@ -181,42 +177,8 @@
     <h2 class="section-title reveal" data-i18n="projects.title">Nuestros Proyectos</h2>
     <p class="section-intro reveal" data-i18n="projects.intro">Cada obra refleja nuestro compromiso con la calidad, el detalle y la satisfacción de nuestros clientes.</p>
 
-    <div class="gallery-grid gallery-grid--preview reveal-group" style="margin-top: var(--space-10);">
-
-      <div class="gallery-item reveal" data-category="residential" data-caption="Casa Residencial — La Vega">
-        <img src="assets/images/projects/project-01.svg" alt="Casa Residencial La Vega" loading="lazy">
-        <div class="gallery-item__overlay">
-          <span class="badge gallery-item__category" data-i18n="projects.filterResidential">Residencial</span>
-          <h3 class="gallery-item__title">Casa Residencial — La Vega</h3>
-        </div>
-        <div class="gallery-item__zoom" aria-hidden="true">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-        </div>
-      </div>
-
-      <div class="gallery-item reveal" data-category="commercial" data-caption="Local Comercial — La Vega">
-        <img src="assets/images/projects/project-02.svg" alt="Local Comercial La Vega" loading="lazy">
-        <div class="gallery-item__overlay">
-          <span class="badge gallery-item__category" data-i18n="projects.filterCommercial">Comercial</span>
-          <h3 class="gallery-item__title">Local Comercial — La Vega</h3>
-        </div>
-        <div class="gallery-item__zoom" aria-hidden="true">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-        </div>
-      </div>
-
-      <div class="gallery-item reveal" data-category="industrial" data-caption="Nave Industrial — La Vega">
-        <img src="assets/images/projects/project-03.svg" alt="Nave Industrial La Vega" loading="lazy">
-        <div class="gallery-item__overlay">
-          <span class="badge gallery-item__category" data-i18n="projects.filterIndustrial">Industrial</span>
-          <h3 class="gallery-item__title">Nave Industrial — La Vega</h3>
-        </div>
-        <div class="gallery-item__zoom" aria-hidden="true">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-        </div>
-      </div>
-
-    </div>
+    <!-- Featured projects — rendered dynamically from data/projects.json -->
+    <div id="featured-projects-grid" class="gallery-grid gallery-grid--preview reveal-group" style="margin-top: var(--space-10);"></div>
 
     <div class="section-cta reveal">
       <a href="proyectos.html" class="btn btn--primary" data-i18n="projects.viewAll">Ver todos los proyectos</a>

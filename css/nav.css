@@ -49,18 +49,10 @@
   text-transform: uppercase;
 }
 
-.nav__logo-icon {
-  width: 40px;
-  height: 40px;
-  background: var(--accent);
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-heading);
-  font-size: var(--text-xl);
-  font-weight: 700;
-  color: var(--color-charcoal);
+.nav__logo-img {
+  height: 44px;
+  width: auto;
+  display: block;
   flex-shrink: 0;
 }
 
