@@ -3,15 +3,9 @@
    Backed by Supabase (auth + database + storage)
 ═══════════════════════════════════════════════════ */
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+import { supabase } from '../js/supabase.js';
 
-// ── Supabase config (same values as js/supabase.js) ───────────
-// Fill these in from: Supabase Dashboard → Settings → API
-const SUPABASE_URL  = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
-const BUCKET   = 'project-images';
+const BUCKET = 'project-images';
 
 // ── State ─────────────────────────────────────────────────────
 let allProjects         = [];

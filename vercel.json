@@ -1,5 +1,7 @@
 {
   "name": "mpconstrucciones",
+  "buildCommand": "node scripts/inject-config.js",
+  "outputDirectory": ".",
   "headers": [
     {
       "source": "/(.*)",
