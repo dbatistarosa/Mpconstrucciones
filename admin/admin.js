@@ -47,7 +47,7 @@ async function loadProjects() {
     try { projects = JSON.parse(stored); return; } catch (e) { /* fall through */ }
   }
   try {
-    const res  = await fetch('../data/projects.json');
+    const res  = await fetch('/data/projects.json');
     const data = await res.json();
     projects   = data.projects || [];
     saveProjects();
@@ -412,7 +412,7 @@ function toSlug(text) {
   return String(text)
     .toLowerCase()
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9\s-]/g, '')
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
