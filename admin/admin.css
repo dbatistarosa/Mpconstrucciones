@@ -812,6 +812,100 @@ img { max-width: 100%; display: block; }
   margin-bottom: 1.25rem;
 }
 
+/* ── Filter bar ────────────────────────────────── */
+.admin-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.admin-filter-bar__search {
+  position: relative;
+  flex: 1 1 200px;
+  min-width: 160px;
+}
+
+.admin-filter-bar__search svg {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--adm-muted);
+  pointer-events: none;
+}
+
+.admin-filter-bar__search input {
+  width: 100%;
+  padding: 0.55rem 0.75rem 0.55rem 2.25rem;
+  background: var(--adm-input-bg);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  color: var(--adm-text);
+  font-family: var(--adm-body);
+  font-size: 0.85rem;
+}
+
+.admin-filter-bar__search input:focus {
+  outline: none;
+  border-color: var(--adm-accent);
+}
+
+.admin-filter-select {
+  padding: 0.55rem 0.75rem;
+  background: var(--adm-input-bg);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  color: var(--adm-text);
+  font-family: var(--adm-body);
+  font-size: 0.85rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.admin-filter-select:focus { outline: none; border-color: var(--adm-accent); }
+
+.admin-filter-bar__count {
+  color: var(--adm-muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+/* ── Loading indicator ─────────────────────────── */
+.admin-table-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  color: var(--adm-muted);
+  font-size: 0.875rem;
+}
+
+.admin-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--adm-border);
+  border-top-color: var(--adm-accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Stat card amber variant ───────────────────── */
+.admin-stat-card--amber .admin-stat-card__value { color: #d97706; }
+
+/* ── Ghost button ──────────────────────────────── */
+.admin-btn--ghost {
+  background: transparent;
+  border: 1px solid var(--adm-border);
+  color: var(--adm-muted);
+}
+.admin-btn--ghost:hover { border-color: var(--adm-accent); color: var(--adm-accent); }
+
 /* ── No-scroll utility ─────────────────────────── */
 .no-scroll { overflow: hidden; }
 

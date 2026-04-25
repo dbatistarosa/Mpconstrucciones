@@ -1,14 +1,49 @@
-const STORAGE_KEY = 'mpc-projects';
+import { supabase, SUPABASE_URL } from './supabase.js';
 
-export async function loadProjects() {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) {
-    try { return JSON.parse(stored); } catch (e) { /* fall through */ }
-  }
-  const res = await fetch('data/projects.json');
+const CONFIGURED = SUPABASE_URL !== 'YOUR_SUPABASE_URL';
+
+function normalizeRow(row) {
+  return {
+    id:          row.id,
+    slug:        row.slug,
+    title:       { es: row.title_es, en: row.title_en  || row.title_es },
+    description: { es: row.description_es || '', en: row.description_en || row.description_es || '' },
+    category:    row.category,
+    status:      row.status,
+    year:        row.year     || '',
+    location:    row.location || '',
+    area:        row.area     || '',
+    client:      row.client   || '',
+    featured:    row.featured || false,
+    cover:       row.cover_url || '',
+    gallery:     row.gallery_urls || [],
+    createdAt:   row.created_at,
+    updatedAt:   row.updated_at
+  };
+}
+
+async function loadFromJson() {
+  const res = await fetch('/data/projects.json');
   if (!res.ok) throw new Error('Failed to load projects.json');
   const data = await res.json();
   return data.projects;
+}
+
+export async function loadProjects() {
+  if (!CONFIGURED) return loadFromJson();
+
+  try {
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return (data || []).map(normalizeRow);
+  } catch (err) {
+    console.warn('[projects] Supabase unavailable, falling back to JSON:', err.message);
+    return loadFromJson();
+  }
 }
 
 export const CATEGORY_LABELS = {
@@ -25,7 +60,7 @@ export function buildGalleryItem(project, lang) {
   const catLabel = CATEGORY_LABELS[project.category]?.[lang] || project.category;
 
   const el = document.createElement('a');
-  el.href  = `proyecto.html?slug=${encodeURIComponent(project.slug)}`;
+  el.href  = `/proyecto.html?slug=${encodeURIComponent(project.slug)}`;
   el.className = 'gallery-item';
   el.setAttribute('data-category', project.category);
   el.setAttribute('data-caption', title);

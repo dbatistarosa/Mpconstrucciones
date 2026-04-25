@@ -1,76 +1,152 @@
 /* ═══════════════════════════════════════════════════
    Admin Dashboard — Mejía Peralta Construcciones
+   Backed by Supabase (auth + database + storage)
 ═══════════════════════════════════════════════════ */
 
-const STORAGE_KEY  = 'mpc-projects';
-const AUTH_KEY     = 'mpc-admin-authed';
-const PASSWORD_KEY = 'mpc-admin-password';
-const DEFAULT_PWD  = 'mpc2024';
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-let projects            = [];
-let editingSlug         = null;
-let coverDataUrl        = null;
-let galleryDataUrls     = [];
-let existingGallerySrcs = [];
+// ── Supabase config (same values as js/supabase.js) ───────────
+// Fill these in from: Supabase Dashboard → Settings → API
+const SUPABASE_URL  = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
 
-// ── Auth ──────────────────────────────────────────────────────────────────────
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
+const BUCKET   = 'project-images';
 
-function isAuthed()   { return sessionStorage.getItem(AUTH_KEY) === '1'; }
+// ── State ─────────────────────────────────────────────────────
+let allProjects         = [];
+let editingId           = null;
+let pendingCoverFile    = null;
+let pendingGalleryFiles = [];
+let existingCoverUrl    = null;
+let existingGalleryUrls = [];
 
-function login(pwd) {
-  const correct = localStorage.getItem(PASSWORD_KEY) || DEFAULT_PWD;
-  if (pwd === correct) { sessionStorage.setItem(AUTH_KEY, '1'); showDashboard(); return true; }
-  return false;
+// ── Auth ──────────────────────────────────────────────────────
+
+async function checkSession() {
+  const { data: { session } } = await supabase.auth.getSession();
+  return !!session;
 }
 
-function logout() { sessionStorage.removeItem(AUTH_KEY); showLogin(); }
+async function login(email, password) {
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) return { ok: false, message: error.message };
+  return { ok: true };
+}
 
-// ── Screens ───────────────────────────────────────────────────────────────────
+async function logout() {
+  await supabase.auth.signOut();
+  showLogin();
+}
+
+// ── Screens ───────────────────────────────────────────────────
 
 function showLogin() {
   document.getElementById('screen-login').hidden     = false;
   document.getElementById('screen-dashboard').hidden = true;
 }
 
-function showDashboard() {
+async function showDashboard() {
   document.getElementById('screen-login').hidden     = true;
   document.getElementById('screen-dashboard').hidden = false;
+  await refreshProjects();
+}
+
+// ── Data helpers ──────────────────────────────────────────────
+
+function flatToProject(row) {
+  return {
+    id:          row.id,
+    slug:        row.slug,
+    title:       { es: row.title_es, en: row.title_en || row.title_es },
+    description: { es: row.description_es || '', en: row.description_en || row.description_es || '' },
+    category:    row.category,
+    status:      row.status,
+    year:        row.year        || '',
+    location:    row.location    || '',
+    area:        row.area        || '',
+    client:      row.client      || '',
+    featured:    row.featured    || false,
+    cover:       row.cover_url   || '',
+    gallery:     row.gallery_urls || [],
+    createdAt:   row.created_at,
+    updatedAt:   row.updated_at
+  };
+}
+
+function projectToFlat(p) {
+  return {
+    slug:          p.slug,
+    title_es:      p.title.es,
+    title_en:      p.title.en || null,
+    description_es: p.description.es,
+    description_en: p.description.en || null,
+    category:      p.category,
+    status:        p.status,
+    year:          p.year     || null,
+    location:      p.location || null,
+    area:          p.area     || null,
+    client:        p.client   || null,
+    featured:      p.featured || false,
+    cover_url:     p.cover    || null,
+    gallery_urls:  p.gallery  || []
+  };
+}
+
+// ── Image upload ──────────────────────────────────────────────
+
+async function uploadImage(file, prefix) {
+  const ext  = file.name.split('.').pop().toLowerCase() || 'jpg';
+  const path = `${prefix}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const { error } = await supabase.storage.from(BUCKET).upload(path, file, { upsert: true, contentType: file.type });
+  if (error) throw new Error(`Image upload failed: ${error.message}`);
+  return supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+}
+
+// ── CRUD ──────────────────────────────────────────────────────
+
+async function refreshProjects() {
+  setTableLoading(true);
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    showToast('Error al cargar proyectos: ' + error.message, 'error');
+    allProjects = [];
+  } else {
+    allProjects = (data || []).map(flatToProject);
+  }
+
   renderStats();
   renderTable();
+  setTableLoading(false);
 }
 
-// ── Projects persistence ──────────────────────────────────────────────────────
+async function persistProject(projectData) {
+  const flat = projectToFlat(projectData);
 
-async function loadProjects() {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) {
-    try { projects = JSON.parse(stored); return; } catch (e) { /* fall through */ }
-  }
-  try {
-    const res  = await fetch('/data/projects.json');
-    const data = await res.json();
-    projects   = data.projects || [];
-    saveProjects();
-  } catch (err) {
-    console.error('[admin] Could not load projects.json:', err);
-    projects = [];
+  if (editingId) {
+    const { error } = await supabase.from('projects').update(flat).eq('id', editingId);
+    if (error) throw new Error(error.message);
+  } else {
+    const { error } = await supabase.from('projects').insert([flat]);
+    if (error) throw new Error(error.message);
   }
 }
 
-function saveProjects() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
-}
-
-// ── CRUD ──────────────────────────────────────────────────────────────────────
-
-function deleteProject(slug) {
+async function removeProject(id, slug) {
   if (!confirm('¿Eliminar este proyecto? Esta acción no se puede deshacer.')) return;
-  projects = projects.filter(p => p.slug !== slug);
-  saveProjects();
-  renderStats();
-  renderTable();
+
+  const { error } = await supabase.from('projects').delete().eq('id', id);
+  if (error) { showToast('Error al eliminar: ' + error.message, 'error'); return; }
+
   showToast('Proyecto eliminado');
+  await refreshProjects();
 }
+
+// ── Form submit ───────────────────────────────────────────────
 
 async function handleFormSubmit(e) {
   e.preventDefault();
@@ -85,65 +161,68 @@ async function handleFormSubmit(e) {
     return;
   }
 
-  let slug = document.getElementById('f-slug').value.trim() || toSlug(titleEs);
+  const submitBtn = e.target.querySelector('[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Guardando…';
 
-  // Ensure slug uniqueness (allow same slug when editing same project)
-  const collision = projects.find(p => p.slug === slug && p.slug !== editingSlug);
-  if (collision) slug = slug + '-' + Date.now().toString(36).slice(-4);
+  try {
+    // Upload cover if a new file was selected
+    let coverUrl = existingCoverUrl;
+    if (pendingCoverFile) {
+      coverUrl = await uploadImage(pendingCoverFile, 'cover');
+    }
 
-  // Cover
-  let cover = coverDataUrl;
-  if (!cover && editingSlug) {
-    cover = projects.find(p => p.slug === editingSlug)?.cover || '';
+    // Upload new gallery images
+    const newGalleryUrls = [];
+    for (const file of pendingGalleryFiles) {
+      newGalleryUrls.push(await uploadImage(file, 'gallery'));
+    }
+
+    let slug = document.getElementById('f-slug').value.trim() || toSlug(titleEs);
+    // Ensure uniqueness when creating (allow same slug when editing)
+    const collision = allProjects.find(p => p.slug === slug && p.id !== editingId);
+    if (collision) slug = slug + '-' + Date.now().toString(36).slice(-4);
+
+    const gallery = [...existingGalleryUrls, ...newGalleryUrls];
+    if (coverUrl && !gallery.includes(coverUrl)) gallery.unshift(coverUrl);
+
+    const projectData = {
+      slug,
+      title:       { es: titleEs, en: titleEn || titleEs },
+      description: { es: descEs,  en: descEn  || descEs  },
+      category:    document.getElementById('f-category').value,
+      status:      document.getElementById('f-status').value,
+      year:        document.getElementById('f-year').value.trim(),
+      location:    document.getElementById('f-location').value.trim(),
+      area:        document.getElementById('f-area').value.trim(),
+      client:      document.getElementById('f-client').value.trim(),
+      featured:    document.getElementById('f-featured').checked,
+      cover:       coverUrl || '',
+      gallery
+    };
+
+    await persistProject(projectData);
+    closeModal();
+    showToast(editingId ? 'Proyecto actualizado' : 'Proyecto creado correctamente');
+    await refreshProjects();
+  } catch (err) {
+    showToast('Error: ' + err.message, 'error');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2.5" width="14" height="14">
+      <polyline points="20 6 9 17 4 12"/></svg> Guardar Proyecto`;
   }
-
-  // Gallery = existing (kept) + new uploads
-  const gallery = [...existingGallerySrcs, ...galleryDataUrls];
-  if (cover && !gallery.includes(cover)) gallery.unshift(cover);
-
-  const now = new Date().toISOString();
-  const existing = editingSlug ? projects.find(p => p.slug === editingSlug) : null;
-
-  const projectData = {
-    id:          existing?.id || generateId(),
-    slug,
-    title:       { es: titleEs, en: titleEn || titleEs },
-    description: { es: descEs,  en: descEn  || descEs  },
-    category:    document.getElementById('f-category').value,
-    status:      document.getElementById('f-status').value,
-    year:        document.getElementById('f-year').value.trim(),
-    location:    document.getElementById('f-location').value.trim(),
-    area:        document.getElementById('f-area').value.trim(),
-    client:      document.getElementById('f-client').value.trim(),
-    featured:    document.getElementById('f-featured').checked,
-    cover:       cover || '',
-    gallery,
-    createdAt:   existing?.createdAt || now,
-    updatedAt:   now
-  };
-
-  if (editingSlug) {
-    const idx = projects.findIndex(p => p.slug === editingSlug);
-    if (idx !== -1) projects[idx] = projectData;
-    else projects.push(projectData);
-  } else {
-    projects.push(projectData);
-  }
-
-  saveProjects();
-  renderStats();
-  renderTable();
-  closeModal();
-  showToast(editingSlug ? 'Proyecto actualizado correctamente' : 'Proyecto creado correctamente');
 }
 
-// ── Modal ─────────────────────────────────────────────────────────────────────
+// ── Modal ─────────────────────────────────────────────────────
 
-function openModal(slug) {
-  editingSlug         = slug || null;
-  coverDataUrl        = null;
-  galleryDataUrls     = [];
-  existingGallerySrcs = [];
+function openModal(id) {
+  editingId           = id || null;
+  pendingCoverFile    = null;
+  pendingGalleryFiles = [];
+  existingCoverUrl    = null;
+  existingGalleryUrls = [];
 
   const form = document.getElementById('project-form');
   form.reset();
@@ -151,11 +230,11 @@ function openModal(slug) {
   const prevImg = document.getElementById('cover-preview-img');
   prevImg.src   = '';
   prevImg.style.display = 'none';
-  document.getElementById('cover-placeholder').style.display = 'flex';
-  document.getElementById('gallery-preview-grid').innerHTML  = '';
+  document.getElementById('cover-placeholder').style.display    = 'flex';
+  document.getElementById('gallery-preview-grid').innerHTML     = '';
 
-  if (slug) {
-    const p = projects.find(pr => pr.slug === slug);
+  if (id) {
+    const p = allProjects.find(pr => pr.id === id);
     if (!p) return;
 
     document.getElementById('modal-title').textContent = 'Editar Proyecto';
@@ -172,18 +251,19 @@ function openModal(slug) {
     document.getElementById('f-featured').checked = !!p.featured;
     document.getElementById('f-slug').value      = p.slug      || '';
 
+    existingCoverUrl = p.cover || null;
     if (p.cover) {
       prevImg.src = p.cover;
       prevImg.style.display = 'block';
       document.getElementById('cover-placeholder').style.display = 'none';
     }
 
-    existingGallerySrcs = [...(p.gallery || [])];
+    existingGalleryUrls = [...(p.gallery || []).filter(u => u !== p.cover)];
     renderGalleryPreview();
   } else {
-    document.getElementById('modal-title').textContent      = 'Nuevo Proyecto';
-    document.getElementById('f-location').value             = 'La Vega, RD';
-    document.getElementById('f-year').value                 = new Date().getFullYear().toString();
+    document.getElementById('modal-title').textContent  = 'Nuevo Proyecto';
+    document.getElementById('f-location').value         = 'La Vega, RD';
+    document.getElementById('f-year').value             = new Date().getFullYear().toString();
   }
 
   document.getElementById('modal-project').hidden = false;
@@ -194,34 +274,26 @@ function openModal(slug) {
 function closeModal() {
   document.getElementById('modal-project').hidden = true;
   document.body.classList.remove('no-scroll');
-  editingSlug = null; coverDataUrl = null; galleryDataUrls = []; existingGallerySrcs = [];
+  editingId = null; pendingCoverFile = null;
+  pendingGalleryFiles = []; existingCoverUrl = null; existingGalleryUrls = [];
 }
 
-// ── Image handling ────────────────────────────────────────────────────────────
-
-function readFileAsDataUrl(file) {
-  return new Promise(resolve => {
-    const reader = new FileReader();
-    reader.onload = e => resolve(e.target.result);
-    reader.readAsDataURL(file);
-  });
-}
+// ── Image handling ────────────────────────────────────────────
 
 async function handleCoverChange(input) {
   const file = input.files[0];
   if (!file) return;
-  coverDataUrl = await readFileAsDataUrl(file);
+  pendingCoverFile = file;
+  const objectUrl = URL.createObjectURL(file);
   const img = document.getElementById('cover-preview-img');
-  img.src   = coverDataUrl;
+  img.src   = objectUrl;
   img.style.display = 'block';
   document.getElementById('cover-placeholder').style.display = 'none';
 }
 
 async function handleGalleryChange(input) {
   for (const file of [...input.files]) {
-    if (file.type.startsWith('image/')) {
-      galleryDataUrls.push(await readFileAsDataUrl(file));
-    }
+    if (file.type.startsWith('image/')) pendingGalleryFiles.push(file);
   }
   renderGalleryPreview();
   input.value = '';
@@ -231,16 +303,17 @@ function renderGalleryPreview() {
   const grid = document.getElementById('gallery-preview-grid');
   grid.innerHTML = '';
 
-  existingGallerySrcs.forEach((src, i) => {
+  existingGalleryUrls.forEach((src, i) => {
     grid.appendChild(makePreviewItem(src, false, () => {
-      existingGallerySrcs.splice(i, 1);
+      existingGalleryUrls.splice(i, 1);
       renderGalleryPreview();
     }));
   });
 
-  galleryDataUrls.forEach((src, i) => {
-    grid.appendChild(makePreviewItem(src, true, () => {
-      galleryDataUrls.splice(i, 1);
+  pendingGalleryFiles.forEach((file, i) => {
+    const url = URL.createObjectURL(file);
+    grid.appendChild(makePreviewItem(url, true, () => {
+      pendingGalleryFiles.splice(i, 1);
       renderGalleryPreview();
     }));
   });
@@ -250,15 +323,110 @@ function makePreviewItem(src, isNew, onRemove) {
   const div = document.createElement('div');
   div.className = 'gallery-preview-item' + (isNew ? ' gallery-preview-item--new' : '');
   div.innerHTML = `
-    <img src="${src}" alt="">
-    <button type="button" class="gallery-preview-item__remove" aria-label="Eliminar">✕</button>
+    <img src="${escHtml(src)}" alt="">
+    <button type="button" class="gallery-preview-item__remove" aria-label="Eliminar">&times;</button>
     ${isNew ? '<span class="gallery-preview-item__badge">Nuevo</span>' : ''}
   `;
   div.querySelector('.gallery-preview-item__remove').addEventListener('click', onRemove);
   return div;
 }
 
-// ── Auto-slug ─────────────────────────────────────────────────────────────────
+// ── Table render ──────────────────────────────────────────────
+
+const CAT_LABELS = {
+  residential: 'Residencial',
+  commercial:  'Comercial',
+  industrial:  'Industrial',
+  cabin:       'Cabañas'
+};
+
+function getFilteredProjects() {
+  const search = (document.getElementById('search-input')?.value || '').toLowerCase();
+  const cat    = document.getElementById('filter-category')?.value || '';
+  const status = document.getElementById('filter-status')?.value   || '';
+
+  return allProjects.filter(p => {
+    if (cat    && p.category !== cat)    return false;
+    if (status && p.status   !== status) return false;
+    if (search) {
+      const hay = [p.title?.es, p.title?.en, p.slug, p.location, p.year].join(' ').toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+}
+
+function renderTable() {
+  const tbody    = document.getElementById('projects-tbody');
+  const filtered = getFilteredProjects();
+  tbody.innerHTML = '';
+
+  if (!filtered.length) {
+    const msg = allProjects.length
+      ? 'No se encontraron proyectos con ese filtro.'
+      : 'No hay proyectos aún. Crea el primero usando el botón "Nuevo Proyecto".';
+    tbody.innerHTML = `<tr><td colspan="6" class="admin-table__empty">${msg}</td></tr>`;
+    return;
+  }
+
+  filtered.forEach(p => {
+    const finished = p.status === 'finished';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="admin-table__cover-cell">
+        ${p.cover
+          ? `<img src="${escHtml(p.cover)}" alt="" class="admin-table__thumb">`
+          : `<div class="admin-table__thumb admin-table__thumb--empty"></div>`}
+      </td>
+      <td>
+        <div class="admin-table__project-name">${escHtml(p.title?.es || '')}</div>
+        <div class="admin-table__project-slug">${escHtml(p.slug)}</div>
+      </td>
+      <td><span class="admin-badge admin-badge--category">${CAT_LABELS[p.category] || p.category}</span></td>
+      <td><span class="admin-badge admin-badge--${finished ? 'finished' : 'progress'}">${finished ? 'Terminado' : 'En Construcción'}</span></td>
+      <td>${escHtml(p.year || '—')}</td>
+      <td class="admin-table__actions">
+        <a href="/proyecto.html?slug=${encodeURIComponent(p.slug)}" target="_blank"
+           class="admin-btn admin-btn--sm admin-btn--ghost" title="Ver en el sitio">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" width="13" height="13">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+        </a>
+        <button class="admin-btn admin-btn--sm admin-btn--secondary js-edit"
+                data-id="${escAttr(p.id)}">Editar</button>
+        <button class="admin-btn admin-btn--sm admin-btn--danger js-delete"
+                data-id="${escAttr(p.id)}" data-slug="${escAttr(p.slug)}">Eliminar</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  tbody.querySelectorAll('.js-edit').forEach(btn =>
+    btn.addEventListener('click', () => openModal(btn.dataset.id)));
+  tbody.querySelectorAll('.js-delete').forEach(btn =>
+    btn.addEventListener('click', () => removeProject(btn.dataset.id, btn.dataset.slug)));
+
+  document.getElementById('table-count').textContent =
+    `${filtered.length} proyecto${filtered.length !== 1 ? 's' : ''}`;
+}
+
+function renderStats() {
+  document.getElementById('stat-total').textContent    = allProjects.length;
+  document.getElementById('stat-featured').textContent = allProjects.filter(p => p.featured).length;
+  document.getElementById('stat-finished').textContent = allProjects.filter(p => p.status === 'finished').length;
+  document.getElementById('stat-progress').textContent = allProjects.filter(p => p.status === 'under_construction').length;
+}
+
+function setTableLoading(on) {
+  const wrap = document.getElementById('table-loading');
+  if (wrap) wrap.hidden = !on;
+  const table = document.getElementById('projects-table-wrap');
+  if (table) table.style.opacity = on ? '0.4' : '1';
+}
+
+// ── Auto-slug ─────────────────────────────────────────────────
 
 function setupAutoSlug() {
   const titleInput = document.getElementById('f-title-es');
@@ -272,117 +440,7 @@ function setupAutoSlug() {
   });
 }
 
-// ── Table render ──────────────────────────────────────────────────────────────
-
-const CAT_LABELS = { residential: 'Residencial', commercial: 'Comercial', industrial: 'Industrial', cabin: 'Cabañas' };
-
-function renderTable() {
-  const tbody = document.getElementById('projects-tbody');
-  tbody.innerHTML = '';
-
-  if (!projects.length) {
-    tbody.innerHTML = `<tr><td colspan="6" class="admin-table__empty">No hay proyectos aún. Crea el primero usando el botón "Nuevo Proyecto".</td></tr>`;
-    return;
-  }
-
-  [...projects].reverse().forEach(p => {
-    const finished = p.status === 'finished';
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td class="admin-table__cover-cell">
-        ${p.cover
-          ? `<img src="${p.cover}" alt="" class="admin-table__thumb">`
-          : `<div class="admin-table__thumb admin-table__thumb--empty"></div>`}
-      </td>
-      <td>
-        <div class="admin-table__project-name">${escHtml(p.title?.es || '')}</div>
-        <div class="admin-table__project-slug">${escHtml(p.slug)}</div>
-      </td>
-      <td><span class="admin-badge admin-badge--category">${CAT_LABELS[p.category] || p.category}</span></td>
-      <td><span class="admin-badge admin-badge--${finished ? 'finished' : 'progress'}">${finished ? 'Terminado' : 'En Construcción'}</span></td>
-      <td>${escHtml(p.year || '—')}</td>
-      <td class="admin-table__actions">
-        <a href="../proyecto.html?slug=${encodeURIComponent(p.slug)}" target="_blank"
-           class="admin-btn admin-btn--sm admin-btn--ghost" title="Ver página pública">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </a>
-        <button class="admin-btn admin-btn--sm admin-btn--secondary js-edit"
-                data-slug="${escAttr(p.slug)}">Editar</button>
-        <button class="admin-btn admin-btn--sm admin-btn--danger js-delete"
-                data-slug="${escAttr(p.slug)}">Eliminar</button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-
-  tbody.querySelectorAll('.js-edit').forEach(btn =>
-    btn.addEventListener('click', () => openModal(btn.dataset.slug)));
-  tbody.querySelectorAll('.js-delete').forEach(btn =>
-    btn.addEventListener('click', () => deleteProject(btn.dataset.slug)));
-}
-
-function renderStats() {
-  document.getElementById('stat-total').textContent    = projects.length;
-  document.getElementById('stat-finished').textContent = projects.filter(p => p.status === 'finished').length;
-  document.getElementById('stat-progress').textContent = projects.filter(p => p.status === 'under_construction').length;
-}
-
-// ── View navigation ───────────────────────────────────────────────────────────
-
-function switchView(viewName) {
-  document.querySelectorAll('.admin-view').forEach(v => v.hidden = true);
-  document.querySelectorAll('.admin-nav__link').forEach(l => l.classList.remove('is-active'));
-
-  const view = document.getElementById('view-' + viewName);
-  if (view) view.hidden = false;
-  const link = document.querySelector(`.admin-nav__link[data-view="${viewName}"]`);
-  if (link) link.classList.add('is-active');
-
-  const titles = { projects: 'Proyectos', settings: 'Configuración' };
-  document.getElementById('topbar-title').textContent = titles[viewName] || viewName;
-
-  // Show/hide toolbar buttons based on view
-  const isProjects = viewName === 'projects';
-  document.getElementById('new-project-btn').style.display = isProjects ? '' : 'none';
-  document.getElementById('export-btn').style.display      = isProjects ? '' : 'none';
-}
-
-// ── Export / Reset ────────────────────────────────────────────────────────────
-
-function exportJSON() {
-  const blob = new Blob([JSON.stringify({ projects }, null, 2)], { type: 'application/json' });
-  const url  = URL.createObjectURL(blob);
-  const a    = Object.assign(document.createElement('a'), { href: url, download: 'projects.json' });
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showToast('Descargado projects.json — reemplaza el archivo en el servidor para publicar los cambios');
-}
-
-async function resetToOriginal() {
-  if (!confirm('¿Restaurar los proyectos originales? Se perderán todos los cambios locales.')) return;
-  localStorage.removeItem(STORAGE_KEY);
-  await loadProjects();
-  renderStats();
-  renderTable();
-  showToast('Proyectos restaurados al estado original');
-}
-
-// ── Settings ──────────────────────────────────────────────────────────────────
-
-function handleChangePassword(e) {
-  e.preventDefault();
-  const newPwd = document.getElementById('new-password').value;
-  const confPwd = document.getElementById('confirm-password').value;
-  if (newPwd.length < 4)   { showToast('La contraseña debe tener al menos 4 caracteres', 'error'); return; }
-  if (newPwd !== confPwd)  { showToast('Las contraseñas no coinciden', 'error'); return; }
-  localStorage.setItem(PASSWORD_KEY, newPwd);
-  document.getElementById('change-password-form').reset();
-  showToast('Contraseña actualizada correctamente');
-}
-
-// ── Drag & Drop upload zone ───────────────────────────────────────────────────
+// ── Drop zones ────────────────────────────────────────────────
 
 function setupDropZone(area, input, onFiles) {
   area.addEventListener('click',     () => input.click());
@@ -395,7 +453,25 @@ function setupDropZone(area, input, onFiles) {
   });
 }
 
-// ── Toast ─────────────────────────────────────────────────────────────────────
+// ── View navigation ───────────────────────────────────────────
+
+function switchView(viewName) {
+  document.querySelectorAll('.admin-view').forEach(v  => v.hidden = true);
+  document.querySelectorAll('.admin-nav__link').forEach(l => l.classList.remove('is-active'));
+
+  const view = document.getElementById('view-' + viewName);
+  if (view) view.hidden = false;
+  const link = document.querySelector(`.admin-nav__link[data-view="${viewName}"]`);
+  if (link) link.classList.add('is-active');
+
+  const titles = { projects: 'Proyectos', settings: 'Configuración' };
+  document.getElementById('topbar-title').textContent = titles[viewName] || viewName;
+
+  const isProjects = viewName === 'projects';
+  document.getElementById('new-project-btn').style.display = isProjects ? '' : 'none';
+}
+
+// ── Toast ─────────────────────────────────────────────────────
 
 let toastTimer;
 function showToast(message, type = 'success') {
@@ -406,7 +482,7 @@ function showToast(message, type = 'success') {
   toastTimer = setTimeout(() => t.classList.remove('admin-toast--visible'), 3500);
 }
 
-// ── Utilities ─────────────────────────────────────────────────────────────────
+// ── Utilities ─────────────────────────────────────────────────
 
 function toSlug(text) {
   return String(text)
@@ -419,59 +495,88 @@ function toSlug(text) {
     .replace(/^-|-$/g, '');
 }
 
-function generateId()        { return 'proj-' + Date.now().toString(36); }
-function escHtml(str)        { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function escAttr(str)        { return String(str).replace(/"/g,'&quot;'); }
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
 
-// ── Init ──────────────────────────────────────────────────────────────────────
+function escAttr(str) { return String(str).replace(/"/g, '&quot;'); }
+
+// ── Init ──────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', async () => {
-  await loadProjects();
 
-  isAuthed() ? showDashboard() : showLogin();
+  const authed = await checkSession();
+  authed ? showDashboard() : showLogin();
 
-  // Auth
-  document.getElementById('login-form').addEventListener('submit', e => {
+  // ── Login
+  document.getElementById('login-form').addEventListener('submit', async e => {
     e.preventDefault();
-    const pwd = document.getElementById('password-input').value;
-    if (!login(pwd)) {
-      document.getElementById('login-error').hidden = false;
+    const email = document.getElementById('email-input').value.trim();
+    const pwd   = document.getElementById('password-input').value;
+    const btn   = e.target.querySelector('button[type="submit"]');
+
+    btn.disabled    = true;
+    btn.textContent = 'Iniciando sesión…';
+    document.getElementById('login-error').hidden = true;
+
+    const result = await login(email, pwd);
+    if (result.ok) {
+      showDashboard();
+    } else {
+      const errEl = document.getElementById('login-error');
+      errEl.textContent = result.message.includes('Invalid') || result.message.includes('credentials')
+        ? 'Correo o contraseña incorrectos.'
+        : result.message;
+      errEl.hidden = false;
       document.getElementById('password-input').value = '';
       document.getElementById('password-input').focus();
     }
+
+    btn.disabled    = false;
+    btn.textContent = 'Ingresar';
   });
+
   document.getElementById('logout-btn').addEventListener('click', logout);
 
-  // Nav
+  // ── Nav
   document.querySelectorAll('.admin-nav__link[data-view]').forEach(link =>
     link.addEventListener('click', e => { e.preventDefault(); switchView(link.dataset.view); }));
 
-  // Toolbar
+  // ── Toolbar
   document.getElementById('new-project-btn').addEventListener('click', () => openModal(null));
-  document.getElementById('export-btn').addEventListener('click', exportJSON);
-  const resetBtn = document.getElementById('reset-btn');
-  if (resetBtn) resetBtn.addEventListener('click', resetToOriginal);
+  document.getElementById('refresh-btn').addEventListener('click', refreshProjects);
 
-  // Modal
-  document.getElementById('modal-close').addEventListener('click', closeModal);
-  document.getElementById('cancel-btn').addEventListener('click', closeModal);
+  // ── Search / filter
+  ['search-input', 'filter-category', 'filter-status'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', renderTable);
+  });
+
+  // ── Modal
+  document.getElementById('modal-close').addEventListener('click',    closeModal);
+  document.getElementById('cancel-btn').addEventListener('click',     closeModal);
   document.getElementById('modal-backdrop').addEventListener('click', closeModal);
-  document.getElementById('project-form').addEventListener('submit', handleFormSubmit);
+  document.getElementById('project-form').addEventListener('submit',  handleFormSubmit);
 
-  // File inputs
+  // ── File inputs
   document.getElementById('f-cover').addEventListener('change', function () { handleCoverChange(this); });
   document.getElementById('f-gallery').addEventListener('change', function () { handleGalleryChange(this); });
 
-  // Drop zones
+  // ── Drop zones
   setupDropZone(
     document.getElementById('cover-upload-area'),
     document.getElementById('f-cover'),
     async files => {
       const img = files.find(f => f.type.startsWith('image/'));
       if (img) {
-        coverDataUrl = await readFileAsDataUrl(img);
+        pendingCoverFile = img;
         const el = document.getElementById('cover-preview-img');
-        el.src = coverDataUrl; el.style.display = 'block';
+        el.src = URL.createObjectURL(img);
+        el.style.display = 'block';
         document.getElementById('cover-placeholder').style.display = 'none';
       }
     }
@@ -481,19 +586,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('f-gallery'),
     async files => {
       for (const f of files) {
-        if (f.type.startsWith('image/')) galleryDataUrls.push(await readFileAsDataUrl(f));
+        if (f.type.startsWith('image/')) pendingGalleryFiles.push(f);
       }
       renderGalleryPreview();
     }
   );
 
-  // Auto-slug
+  // ── Auto-slug
   setupAutoSlug();
 
-  // Settings
-  document.getElementById('change-password-form').addEventListener('submit', handleChangePassword);
-
-  // Keyboard
+  // ── Keyboard
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && !document.getElementById('modal-project').hidden) closeModal();
   });
