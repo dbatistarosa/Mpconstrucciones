@@ -24,7 +24,13 @@ const content = `import { createClient } from 'https://cdn.jsdelivr.net/npm/@sup
 export const SUPABASE_URL  = '${url}';
 export const SUPABASE_ANON = '${anon}';
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON, {
+  auth: {
+    storage: typeof sessionStorage !== 'undefined' ? sessionStorage : undefined,
+    persistSession: true,
+    autoRefreshToken: true
+  }
+});
 `;
 
 const outPath = path.join(__dirname, '..', 'js', 'supabase.js');

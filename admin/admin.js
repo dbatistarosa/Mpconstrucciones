@@ -18,8 +18,13 @@ let existingGalleryUrls = [];
 // ── Auth ──────────────────────────────────────────────────────
 
 async function checkSession() {
-  const { data: { session } } = await supabase.auth.getSession();
-  return !!session;
+  try {
+    const { data, error } = await supabase.auth.getSession();
+    if (error) return false;
+    return !!(data && data.session);
+  } catch (e) {
+    return false;
+  }
 }
 
 async function login(email, password) {
@@ -93,21 +98,46 @@ async function uploadImage(file, prefix) {
   const ext  = file.name.split('.').pop().toLowerCase() || 'jpg';
   const path = `${prefix}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
   const { error } = await supabase.storage.from(BUCKET).upload(path, file, { upsert: true, contentType: file.type });
-  if (error) throw new Error(`Image upload failed: ${error.message}`);
+  if (error) {
+    const msg = (error.message || '').toLowerCase();
+    if (msg.includes('bucket') || msg.includes('not found') || msg.includes('storage')) {
+      showSetupGuide();
+      throw new Error('El bucket de almacenamiento no existe. Ejecuta supabase-setup.sql en Supabase primero.');
+    }
+    throw new Error('Error subiendo imagen: ' + error.message);
+  }
   return supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
 }
 
 // ── CRUD ──────────────────────────────────────────────────────
 
+function isDbSetupError(error) {
+  if (!error) return false;
+  const msg = (error.message || '').toLowerCase();
+  return (
+    msg.includes('schema cache') ||
+    msg.includes('does not exist') ||
+    msg.includes('relation') ||
+    error.code === '42P01' ||
+    error.code === 'PGRST200'
+  );
+}
+
 async function refreshProjects() {
   setTableLoading(true);
+  hideSetupGuide();
+
   const { data, error } = await supabase
     .from('projects')
     .select('*')
     .order('created_at', { ascending: false });
 
   if (error) {
-    showToast('Error al cargar proyectos: ' + error.message, 'error');
+    if (isDbSetupError(error)) {
+      showSetupGuide();
+    } else {
+      showToast('Error al cargar proyectos: ' + error.message, 'error');
+    }
     allProjects = [];
   } else {
     allProjects = (data || []).map(flatToProject);
@@ -463,6 +493,18 @@ function switchView(viewName) {
 
   const isProjects = viewName === 'projects';
   document.getElementById('new-project-btn').style.display = isProjects ? '' : 'none';
+}
+
+// ── Setup guide ───────────────────────────────────────────────
+
+function showSetupGuide() {
+  const el = document.getElementById('setup-guide');
+  if (el) el.hidden = false;
+}
+
+function hideSetupGuide() {
+  const el = document.getElementById('setup-guide');
+  if (el) el.hidden = true;
 }
 
 // ── Toast ─────────────────────────────────────────────────────
