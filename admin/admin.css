@@ -754,7 +754,7 @@ img { max-width: 100%; display: block; }
   border: 1px solid var(--adm-border);
   border-radius: var(--adm-radius);
   padding: 1.5rem;
-  max-width: 480px;
+  max-width: 700px;
   margin-bottom: 1.5rem;
 }
 
@@ -777,6 +777,102 @@ img { max-width: 100%; display: block; }
   margin-bottom: 1rem;
   line-height: 1.6;
 }
+
+/* Connection status */
+.admin-conn-status {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.conn-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+  display: inline-block;
+}
+.conn-dot--green { background: var(--adm-green); box-shadow: 0 0 6px rgba(34,197,94,0.5); }
+.conn-dot--amber { background: var(--adm-yellow); }
+.conn-dot--red   { background: var(--adm-red); }
+
+/* Connection test result */
+.conn-test-result {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--adm-bg);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  font-size: 0.8125rem;
+  font-family: monospace;
+  white-space: pre-wrap;
+  line-height: 1.7;
+  display: block;
+}
+.conn-test-result--ok    { border-color: var(--adm-green); color: var(--adm-green); }
+.conn-test-result--error { border-color: var(--adm-red);   color: #f87171; }
+
+/* Settings helper text */
+.admin-settings-help {
+  margin-top: 1.25rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  font-size: 0.78rem;
+  color: var(--adm-muted);
+  line-height: 1.7;
+}
+.admin-settings-help a { color: var(--adm-accent-h); }
+.admin-settings-help a:hover { text-decoration: underline; }
+
+/* Settings steps list */
+.admin-settings-steps {
+  margin: 0.75rem 0 0 1.25rem;
+  color: var(--adm-muted);
+  font-size: 0.8125rem;
+  line-height: 1.9;
+}
+.admin-settings-steps li::marker { color: var(--adm-accent); }
+.admin-settings-steps strong { color: var(--adm-text); }
+.admin-settings-steps a { color: var(--adm-accent-h); }
+.admin-settings-steps code {
+  background: var(--adm-bg);
+  border: 1px solid var(--adm-border);
+  border-radius: 3px;
+  padding: 0 4px;
+  font-size: 0.75rem;
+}
+
+/* Login screen — not-configured warning */
+.admin-config-warning {
+  margin-top: 1.25rem;
+  padding: 0.875rem 1rem;
+  background: rgba(251,191,36,0.08);
+  border: 1px solid rgba(251,191,36,0.25);
+  border-radius: var(--adm-radius);
+  text-align: left;
+}
+
+.admin-config-warning p {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--adm-yellow);
+  flex-wrap: wrap;
+}
+.admin-config-warning p svg { flex-shrink: 0; }
+.admin-config-warning a {
+  color: var(--adm-accent-h);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.admin-config-warning a:hover { color: var(--adm-yellow); }
 
 /* ── Toast ─────────────────────────────────────── */
 .admin-toast {

@@ -33,8 +33,35 @@
                placeholder="••••••••" required>
       </div>
       <button type="submit" class="admin-login-btn">Ingresar</button>
-      <p id="login-error" class="admin-login-error" hidden>Correo o contraseña incorrectos.</p>
+      <p id="login-error" class="admin-login-error" hidden></p>
     </form>
+
+    <!-- Shown by JS when Supabase is not yet configured -->
+    <div id="config-warning" class="admin-config-warning" hidden>
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <strong>Supabase no configurado.</strong>
+        <a href="#" id="open-config-link">Configurar ahora →</a>
+      </p>
+      <div id="login-config-form" hidden>
+        <div class="admin-login-field" style="margin-top:0.75rem;">
+          <label for="lc-url">URL del proyecto Supabase</label>
+          <input type="url" id="lc-url" placeholder="https://xxxx.supabase.co">
+        </div>
+        <div class="admin-login-field">
+          <label for="lc-anon">Clave Anon / Pública</label>
+          <input type="text" id="lc-anon" placeholder="eyJhbGci…" autocomplete="off">
+        </div>
+        <button type="button" id="save-quick-config" class="admin-login-btn" style="background:var(--adm-accent-h);margin-top:0.25rem;">
+          Guardar y conectar
+        </button>
+        <p style="font-size:0.75rem;color:var(--adm-muted);margin-top:0.5rem;line-height:1.5;">
+          Encuentra estos valores en:<br>
+          <strong>Supabase Dashboard → Settings → API</strong>
+        </p>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -184,10 +211,76 @@
     <!-- Settings view -->
     <div id="view-settings" class="admin-view" hidden>
 
+      <!-- Connection status + credentials -->
       <div class="admin-settings-card">
-        <h3>Cuenta de Acceso</h3>
-        <p>La autenticación está gestionada por <strong>Supabase Auth</strong>. Para cambiar la contraseña
-           o crear nuevos usuarios administradores, visita el panel de Supabase:</p>
+        <h3>Conexión Supabase</h3>
+        <div id="conn-status" class="admin-conn-status">Verificando…</div>
+
+        <form id="credentials-form" style="margin-top:1.25rem;">
+          <div class="admin-form__row">
+            <div class="admin-form__field">
+              <label for="s-url">URL del proyecto</label>
+              <input type="url" id="s-url" placeholder="https://xxxx.supabase.co" autocomplete="off">
+            </div>
+            <div class="admin-form__field">
+              <label for="s-anon">Clave Anon / Pública</label>
+              <input type="text" id="s-anon" placeholder="eyJhbGci…" autocomplete="off">
+            </div>
+          </div>
+          <div style="display:flex;gap:0.75rem;margin-top:0.75rem;flex-wrap:wrap;">
+            <button type="submit" class="admin-btn admin-btn--primary">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>
+              Guardar y reconectar
+            </button>
+            <button type="button" id="test-conn-btn" class="admin-btn admin-btn--secondary">Probar conexión</button>
+            <button type="button" id="clear-creds-btn" class="admin-btn admin-btn--ghost" style="margin-left:auto;">Limpiar guardado local</button>
+          </div>
+          <pre id="test-conn-result" class="conn-test-result" style="display:none;"></pre>
+        </form>
+
+        <div class="admin-settings-help">
+          <strong>¿Dónde encontrar las credenciales?</strong><br>
+          Supabase Dashboard →
+          <a href="https://supabase.com/dashboard" target="_blank" rel="noopener">supabase.com/dashboard</a>
+          → tu proyecto → <strong>Settings → API</strong><br>
+          Copia <em>Project URL</em> y <em>anon public</em> key.
+        </div>
+      </div>
+
+      <!-- Checklist: create auth user -->
+      <div class="admin-settings-card">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="vertical-align:-3px;margin-right:6px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Crear usuario administrador
+        </h3>
+        <p style="color:var(--adm-muted);font-size:0.85rem;line-height:1.7;margin-top:0.5rem;">
+          El login usa <strong>Supabase Auth</strong>. Sigue estos pasos una sola vez:
+        </p>
+        <ol class="admin-settings-steps">
+          <li>Abre <a href="https://supabase.com/dashboard" target="_blank" rel="noopener">supabase.com/dashboard</a> → tu proyecto</li>
+          <li>Ve a <strong>Authentication → Users</strong></li>
+          <li>Haz clic en <strong>Invite user</strong> (o <strong>Add user → Create new user</strong>)</li>
+          <li>Ingresa el correo y contraseña del administrador</li>
+          <li>Confirma y usa esas credenciales para entrar aquí</li>
+        </ol>
+      </div>
+
+      <!-- Checklist: run SQL -->
+      <div class="admin-settings-card">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="vertical-align:-3px;margin-right:6px;"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          Configurar base de datos
+        </h3>
+        <p style="color:var(--adm-muted);font-size:0.85rem;line-height:1.7;margin-top:0.5rem;">
+          Ejecuta <code>supabase-setup.sql</code> en Supabase una sola vez para crear la tabla <code>projects</code>,
+          el bucket de imágenes y las políticas RLS:
+        </p>
+        <ol class="admin-settings-steps">
+          <li>Supabase Dashboard → <strong>SQL Editor → New Query</strong></li>
+          <li>Copia todo el contenido del archivo <code>supabase-setup.sql</code> de tu repositorio</li>
+          <li>Pégalo en el editor y haz clic en <strong>Run</strong> (o Ctrl+Enter)</li>
+          <li>Recarga esta página — los proyectos aparecerán en la tabla</li>
+        </ol>
         <a href="https://supabase.com/dashboard" target="_blank" rel="noopener"
            class="admin-btn admin-btn--secondary" style="margin-top:0.75rem;display:inline-flex;">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -197,18 +290,6 @@
           </svg>
           Abrir Supabase Dashboard
         </a>
-      </div>
-
-      <div class="admin-settings-card">
-        <h3>Base de Datos</h3>
-        <p>Los proyectos se guardan en <strong>Supabase PostgreSQL</strong> y son visibles desde cualquier
-           dispositivo en tiempo real. Las imágenes se almacenan en <strong>Supabase Storage</strong> con
-           URLs públicas permanentes.</p>
-        <ul style="margin-top:0.75rem;color:var(--adm-muted);font-size:0.85rem;line-height:1.8;padding-left:1.2rem;">
-          <li>Tabla: <code>projects</code></li>
-          <li>Bucket: <code>project-images</code></li>
-          <li>RLS: lectura pública, escritura solo autenticados</li>
-        </ul>
       </div>
 
     </div>
