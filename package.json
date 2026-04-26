@@ -1,0 +1,11 @@
+{
+  "name": "mpconstrucciones",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/inject-config.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -45,19 +45,19 @@
       </p>
       <div id="login-config-form" hidden>
         <div class="admin-login-field" style="margin-top:0.75rem;">
-          <label for="lc-url">URL del proyecto Supabase</label>
-          <input type="url" id="lc-url" placeholder="https://xxxx.supabase.co">
+          <label for="lc-url">URL del proyecto <span style="color:var(--adm-green);font-size:0.7rem;">(ya configurada)</span></label>
+          <input type="url" id="lc-url" placeholder="https://yzpistceuhpcooyfgdvb.supabase.co">
         </div>
         <div class="admin-login-field">
-          <label for="lc-anon">Clave Anon / Pública</label>
+          <label for="lc-anon">Clave Anon / Pública <span style="color:var(--adm-yellow);font-size:0.7rem;">(requerida)</span></label>
           <input type="text" id="lc-anon" placeholder="eyJhbGci…" autocomplete="off">
         </div>
         <button type="button" id="save-quick-config" class="admin-login-btn" style="background:var(--adm-accent-h);margin-top:0.25rem;">
           Guardar y conectar
         </button>
         <p style="font-size:0.75rem;color:var(--adm-muted);margin-top:0.5rem;line-height:1.5;">
-          Encuentra estos valores en:<br>
-          <strong>Supabase Dashboard → Settings → API</strong>
+          <strong>Supabase Dashboard → Settings → API</strong><br>
+          Copia la clave <em>anon public</em> (empieza con <code>eyJ</code>)
         </p>
       </div>
     </div>

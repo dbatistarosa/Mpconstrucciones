@@ -6,14 +6,16 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 import { SUPABASE_URL as BUILT_URL, SUPABASE_ANON as BUILT_ANON } from '../js/supabase.js';
 
-const BUCKET = 'project-images';
+const BUCKET    = 'project-images';
+const KNOWN_URL = 'https://yzpistceuhpcooyfgdvb.supabase.co';
 
 // ── Credentials ────────────────────────────────────────────────
-// Priority: localStorage (set via Settings tab) → Vercel build injection
-const SB_URL  = (localStorage.getItem('mpc_sb_url')  || BUILT_URL).trim();
-const SB_ANON = (localStorage.getItem('mpc_sb_anon') || BUILT_ANON).trim();
+// Priority: localStorage (set via Settings tab) → Vercel build injection → known URL
+const SB_URL  = (localStorage.getItem('mpc_sb_url')  || BUILT_URL  || KNOWN_URL).trim();
+const SB_ANON = (localStorage.getItem('mpc_sb_anon') || BUILT_ANON || '').trim();
 
-const IS_CONFIGURED = SB_URL.startsWith('https://') && SB_ANON.length > 20;
+// Anon keys are JWTs — they always start with 'eyJ' (base64 of '{"')
+const IS_CONFIGURED = SB_URL.startsWith('https://') && SB_ANON.startsWith('eyJ');
 
 const supabase = IS_CONFIGURED
   ? createClient(SB_URL, SB_ANON, {
@@ -527,8 +529,8 @@ function populateSettingsForm() {
   const urlInput  = document.getElementById('s-url');
   const anonInput = document.getElementById('s-anon');
 
-  const displayUrl  = SB_URL  !== 'YOUR_SUPABASE_URL'  ? SB_URL  : '';
-  const displayAnon = SB_ANON !== 'YOUR_SUPABASE_ANON_KEY' ? SB_ANON : '';
+  const displayUrl  = SB_URL  || KNOWN_URL;
+  const displayAnon = SB_ANON.startsWith('eyJ') ? SB_ANON : '';
 
   if (urlInput)  urlInput.value  = displayUrl;
   if (anonInput) anonInput.value = displayAnon;
@@ -538,7 +540,7 @@ function populateSettingsForm() {
   if (statusEl) {
     if (!IS_CONFIGURED) {
       statusEl.innerHTML =
-        '<span class="conn-dot conn-dot--red"></span><strong>No configurado</strong> — Ingresa las credenciales de Supabase abajo.';
+        `<span class="conn-dot conn-dot--red"></span><strong>Falta la clave Anon</strong> — La URL ya está configurada (<code>${SB_URL}</code>). Solo necesitas pegar la <strong>anon public key</strong> de Supabase → Settings → API.`;
     } else if (fromStorage) {
       statusEl.innerHTML =
         `<span class="conn-dot conn-dot--green"></span><strong>Configurado (guardado localmente)</strong><br><code>${SB_URL}</code>`;
@@ -728,7 +730,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('open-config-link')?.addEventListener('click', e => {
     e.preventDefault();
     const form = document.getElementById('login-config-form');
-    if (form) form.hidden = !form.hidden;
+    if (form) {
+      form.hidden = !form.hidden;
+      // Pre-fill URL so user only needs to paste the anon key
+      const urlInput = document.getElementById('lc-url');
+      if (urlInput && !urlInput.value) urlInput.value = SB_URL;
+    }
   });
 
   // ── Quick credential save from login screen

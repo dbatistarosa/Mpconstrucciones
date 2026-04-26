@@ -1,7 +1,8 @@
 {
   "name": "mpconstrucciones",
-  "buildCommand": "node scripts/inject-config.js",
+  "buildCommand": "npm run build",
   "outputDirectory": ".",
+  "installCommand": "echo skip",
   "headers": [
     {
       "source": "/(.*)",
