@@ -64,8 +64,11 @@ export function buildGalleryItem(project, lang) {
   el.className = 'gallery-item';
   el.setAttribute('data-category', project.category);
   el.setAttribute('data-caption', title);
+  const imgHtml = project.cover
+    ? `<img src="${project.cover}" alt="${title}" loading="lazy">`
+    : `<div class="gallery-item__placeholder" aria-hidden="true"></div>`;
   el.innerHTML = `
-    <img src="${project.cover}" alt="${title}" loading="lazy">
+    ${imgHtml}
     <div class="gallery-item__overlay">
       <span class="badge gallery-item__category">${catLabel}</span>
       <h3 class="gallery-item__title">${title}</h3>
