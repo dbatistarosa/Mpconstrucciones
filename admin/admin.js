@@ -543,10 +543,12 @@ function escAttr(str) { return String(str).replace(/"/g, '&quot;'); }
 
 // ── Init ──────────────────────────────────────────────────────
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
 
-  const authed = await checkSession();
-  authed ? showDashboard() : showLogin();
+  // Always show login on every page load.
+  // persistSession:false means no session is ever stored, so this is
+  // the only entry point into the dashboard.
+  showLogin();
 
   // ── Login
   document.getElementById('login-form').addEventListener('submit', async e => {

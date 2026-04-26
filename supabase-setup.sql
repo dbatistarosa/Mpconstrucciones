@@ -2,6 +2,7 @@
 -- Mejía Peralta Construcciones — Supabase Setup
 -- Run this entire script in:
 --   Supabase Dashboard → SQL Editor → New Query → Run
+-- Safe to run multiple times (fully idempotent).
 -- ═══════════════════════════════════════════════════════════════
 
 
@@ -32,6 +33,12 @@ create table if not exists public.projects (
 -- ── 2. Row Level Security ──────────────────────────────────────
 alter table public.projects enable row level security;
 
+-- Drop all existing policies first (idempotent)
+drop policy if exists "Public can read projects"      on public.projects;
+drop policy if exists "Authenticated can insert"      on public.projects;
+drop policy if exists "Authenticated can update"      on public.projects;
+drop policy if exists "Authenticated can delete"      on public.projects;
+
 -- Anyone (including anonymous visitors) can read
 create policy "Public can read projects"
   on public.projects for select
@@ -47,7 +54,8 @@ create policy "Authenticated can insert"
 create policy "Authenticated can update"
   on public.projects for update
   to authenticated
-  using (true);
+  using (true)
+  with check (true);
 
 create policy "Authenticated can delete"
   on public.projects for delete
@@ -79,7 +87,15 @@ values (
   10485760,
   array['image/jpeg','image/jpg','image/png','image/webp','image/gif']
 )
-on conflict (id) do nothing;
+on conflict (id) do update set
+  public = true,
+  file_size_limit = 10485760;
+
+-- Drop existing storage policies (idempotent)
+drop policy if exists "Public can view images"           on storage.objects;
+drop policy if exists "Authenticated can upload images"  on storage.objects;
+drop policy if exists "Authenticated can update images"  on storage.objects;
+drop policy if exists "Authenticated can delete images"  on storage.objects;
 
 -- Public read
 create policy "Public can view images"
@@ -104,8 +120,7 @@ create policy "Authenticated can delete images"
   using (bucket_id = 'project-images');
 
 
--- ── 5. Seed initial projects ───────────────────────────────────
--- Remove or comment this block if you don't want demo data
+-- ── 5. Seed initial projects (skip if already exist) ──────────
 insert into public.projects
   (slug, title_es, title_en, description_es, description_en, category, status, year, location, area, featured, cover_url, gallery_urls)
 values
